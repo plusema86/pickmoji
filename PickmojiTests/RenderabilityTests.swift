@@ -29,13 +29,17 @@ final class RenderabilityTests: XCTestCase {
     }
 
     func testFilterDropsUnrenderableEmojiAndSkins() {
-        let good = Emoji(emoji: "👋", label: "waving hand", tags: [], group: 1, order: 1,
-                         skins: [.init(emoji: "👋🏻", tone: 1), .init(emoji: "👋\u{200D}🚀", tone: 2)])
+        let good = Emoji(emoji: "👋", label: "mano che saluta", tags: ["ciao"], group: 1, order: 1,
+                         skins: [.init(emoji: "👋🏻", tone: 1), .init(emoji: "👋\u{200D}🚀", tone: 2)],
+                         englishLabel: "waving hand", englishTags: ["hello"])
         let bad = Emoji(emoji: "😀\u{200D}🚀", label: "bogus", tags: [], group: 0, order: 2, skins: [])
 
         let filtered = EmojiRenderability.filter([good, bad])
         XCTAssertEqual(filtered.map(\.emoji), ["👋"])
         XCTAssertEqual(filtered[0].skins.map(\.emoji), ["👋🏻"])
+        let index = EmojiSearchIndex(emoji: filtered)
+        XCTAssertEqual(index.search("ciao").map(\.emoji), ["👋"])
+        XCTAssertEqual(index.search("hello").map(\.emoji), ["👋"])
     }
 
     func testBundledDataMostlySurvivesFiltering() throws {

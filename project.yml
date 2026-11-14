@@ -36,6 +36,8 @@ targets:
       - path: Pickmoji
         excludes:
           - "**/*.md"
+      - path: LICENSE
+        buildPhase: resources
       - path: LICENSES
         type: folder
         buildPhase: resources
