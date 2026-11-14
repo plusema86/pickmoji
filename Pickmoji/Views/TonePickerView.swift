@@ -16,6 +16,7 @@ struct TonePickerView: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(ToneButtonStyle())
+                .accessibilityLabel(tone.name)
                 .help(tone.name)
             }
         }

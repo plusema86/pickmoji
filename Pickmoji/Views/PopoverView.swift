@@ -49,14 +49,15 @@ struct PopoverView: View {
                     Image(systemName: "gearshape")
                 }
                 .buttonStyle(.borderless)
-                .help("Settings")
+                .help("Impostazioni")
+                .accessibilityLabel("Impostazioni")
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 6)
         }
         .overlay(alignment: .bottom) {
             if let copied = model.copiedEmoji {
-                Text("Copied \(copied)")
+                Text("Emoji copiata \(copied)")
                     .font(.system(size: 14, weight: .medium))
                     .padding(.horizontal, 14)
                     .padding(.vertical, 8)

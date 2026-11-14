@@ -13,11 +13,11 @@ struct EmojiGridView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 if !model.store.isLoaded {
-                    Text("Loading emoji…")
+                    Text("Caricamento emoji…")
                         .foregroundColor(.secondary)
                         .padding(.top, 40)
                 } else if model.sections.allSatisfy({ $0.items.isEmpty }) {
-                    Text("No emoji found")
+                    Text("Nessuna emoji trovata")
                         .foregroundColor(.secondary)
                         .padding(.top, 40)
                 } else {

@@ -4,16 +4,24 @@
 
 - **Package:** [emojibase-data](https://www.npmjs.com/package/emojibase-data)
 - **Version:** 17.0.0 (Emoji 17.0)
-- **File:** `en/data.json`
-- **URL:** https://cdn.jsdelivr.net/npm/emojibase-data@17.0.0/en/data.json
+- **Files:** [`it/data.json`](https://cdn.jsdelivr.net/npm/emojibase-data@17.0.0/it/data.json)
+  and [`en/data.json`](https://cdn.jsdelivr.net/npm/emojibase-data@17.0.0/en/data.json)
 - **License:** MIT (`LICENSES/emojibase-MIT.txt`). The labels and tags are
   derived from Unicode CLDR annotations, covered by the Unicode License v3
   (`LICENSES/Unicode-License-v3.txt`).
 
 ## What the script keeps
 
-Each entry is trimmed to `emoji`, `label`, `tags`, `group`, `order`, and
-`skins` (each skin: `emoji`, `tone`). Entries are sorted by `order`.
+The English dataset supplies `emoji`, `group`, `order`, and `skins` (each
+skin keeps `emoji` and `tone`). The script joins the Italian dataset by
+hexcode. Its names and keywords supply `label` and `tags`. The original
+English names and keywords (`englishLabel` and `englishTags`) support
+English queries. Entries are sorted by `order`.
+
+`scripts/emoji-synonyms-it.json` supplements the Italian keywords with
+common search terms such as `brioche`, `pattumiera`, and `in bocca al lupo`.
+To add a synonym, use the hexcode from Emojibase's Italian dataset and
+regenerate `emoji.json`.
 
 Dropped:
 
@@ -23,7 +31,7 @@ Dropped:
   handshake with two different tones). The tone picker offers the five
   uniform tones only.
 
-Result: 1,914 emoji and 1,650 skin variants in about 308 KB.
+Result: 1,914 emoji and 1,650 skin variants in about 524 KB.
 
 ## Runtime filtering
 

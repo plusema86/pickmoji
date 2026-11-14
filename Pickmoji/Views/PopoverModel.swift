@@ -81,7 +81,7 @@ final class PopoverModel: ObservableObject {
         if trimmed.isEmpty {
             let recents = usage.top(Self.recentsLimit).compactMap { store.emoji(for: $0) }
             if !recents.isEmpty {
-                built.append(GridSection(id: "recents", title: "Recently used",
+                built.append(GridSection(id: "recents", title: "Usate di recente",
                                          items: recents.map { .init(id: "recents-\($0.emoji)", emoji: $0) }))
             }
             for (group, emoji) in store.sectionsByGroup {
@@ -90,7 +90,7 @@ final class PopoverModel: ObservableObject {
             }
         } else {
             let results = store.search(trimmed)
-            built.append(GridSection(id: "results", title: "Results",
+            built.append(GridSection(id: "results", title: "Risultati",
                                      items: results.map { .init(id: "r-\($0.emoji)", emoji: $0) }))
         }
         sections = built

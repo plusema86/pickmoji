@@ -2,6 +2,24 @@
 
 # Pickmoji
 
+## Versione italiana
+
+Questa versione usa l’italiano per l’interfaccia e per i nomi delle emoji. Puoi
+cercare per nome o parola chiave (per esempio `cuore rosso`, `felicità` o
+`gattino`), anche senza accenti. I risultati in italiano hanno la precedenza e
+la ricerca in inglese resta disponibile. Apri Pickmoji dalla barra dei menu o
+con **⌃⌥E**, la scorciatoia predefinita.
+
+Con Xcode 26 o successivo e XcodeGen (`brew install xcodegen`), apri il progetto
+con questi comandi e avvia lo schema **Pickmoji** con **⌘R**.
+
+```sh
+git clone --branch italian-localization https://github.com/plusema86/pickmoji.git
+cd pickmoji
+xcodegen generate
+open Pickmoji.xcodeproj
+```
+
 A small Mac app for finding an emoji and copying it, fast.
 
 Press **Control + Option + E** (shown as ⌃⌥E on Mac keyboards), type a few

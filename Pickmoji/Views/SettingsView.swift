@@ -15,10 +15,10 @@ struct SettingsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack {
-                Text("Settings").font(.headline)
+                Text("Impostazioni").font(.headline)
                 HStack {
                     Button(action: onBack) {
-                        Label("Back", systemImage: "chevron.left")
+                        Label("Indietro", systemImage: "chevron.left")
                     }
                     .buttonStyle(.borderless)
                     Spacer()
@@ -30,11 +30,11 @@ struct SettingsView: View {
             Divider()
 
             VStack(alignment: .leading, spacing: 10) {
-                row("Hotkey") {
+                row("Scorciatoia") {
                     KeyboardShortcuts.Recorder(for: .togglePopover)
                 }
-                row("Skin tone") {
-                    Picker("", selection: $settings.defaultSkinTone) {
+                row("Tono di pelle") {
+                    Picker("Tono di pelle", selection: $settings.defaultSkinTone) {
                         ForEach(SkinTone.allCases) { tone in
                             Text("\(tone.sample)  \(tone.name)").tag(tone)
                         }
@@ -42,8 +42,8 @@ struct SettingsView: View {
                     .labelsHidden()
                     .frame(maxWidth: 200)
                 }
-                row("Startup") {
-                    Toggle("Launch at login", isOn: Binding(
+                row("Avvio") {
+                    Toggle("Apri al login", isOn: Binding(
                         get: { settings.launchAtLogin },
                         set: { settings.setLaunchAtLogin($0) }
                     ))
@@ -55,8 +55,8 @@ struct SettingsView: View {
                         .foregroundColor(.red)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                row("Recents") {
-                    Button("Clear recents") { usage.clear() }
+                row("Recenti") {
+                    Button("Cancella recenti") { usage.clear() }
                         .disabled(usage.records.isEmpty)
                 }
             }
@@ -73,7 +73,7 @@ struct SettingsView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
                 Spacer()
-                Button("Quit Pickmoji") { NSApp.terminate(nil) }
+                Button("Esci da Pickmoji") { NSApp.terminate(nil) }
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
@@ -84,7 +84,7 @@ struct SettingsView: View {
         HStack(alignment: .center) {
             Text(title)
                 .foregroundColor(.secondary)
-                .frame(width: 70, alignment: .trailing)
+                .frame(width: 88, alignment: .trailing)
             content()
             Spacer(minLength: 0)
         }
@@ -101,13 +101,13 @@ private struct AboutView: View {
 
     private let credits = [
         Credit(id: "emojibase", title: "emojibase-data 17.0.0 (MIT)",
-               detail: "Emoji names and keywords, derived from Unicode CLDR.",
+               detail: "Nomi e parole chiave delle emoji da Unicode CLDR.",
                licenseFile: "emojibase-MIT"),
-        Credit(id: "unicode", title: "Unicode CLDR (Unicode License v3)",
-               detail: "Source of the emoji annotations in emojibase.",
+        Credit(id: "unicode", title: "Unicode CLDR (licenza Unicode v3)",
+               detail: "Fonte delle annotazioni delle emoji in Emojibase.",
                licenseFile: "Unicode-License-v3"),
         Credit(id: "keyboardshortcuts", title: "KeyboardShortcuts 3.1.0 (MIT)",
-               detail: "Global hotkey recording, by Sindre Sorhus.",
+               detail: "Registrazione delle scorciatoie globali, di Sindre Sorhus.",
                licenseFile: "KeyboardShortcuts-MIT"),
     ]
 
@@ -116,7 +116,7 @@ private struct AboutView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Pickmoji is open source under the MIT License. Emoji are drawn by macOS with the Apple Color Emoji font; no emoji artwork is bundled.")
+                Text("Pickmoji è un’app open source con licenza MIT. Le emoji sono visualizzate da macOS con il font Apple Color Emoji.")
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -148,7 +148,7 @@ private struct AboutView: View {
     private func licenseText(_ name: String) -> String {
         guard let url = Bundle.main.url(forResource: name, withExtension: "txt", subdirectory: "LICENSES"),
               let text = try? String(contentsOf: url, encoding: .utf8)
-        else { return "License text not bundled." }
+        else { return "Testo della licenza non disponibile." }
         return text
     }
 }

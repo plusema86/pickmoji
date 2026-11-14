@@ -1,6 +1,8 @@
 name: Pickmoji
 
 options:
+  developmentLanguage: it
+  useBaseInternationalization: false
   bundleIdPrefix: com.dsiredesign
   deploymentTarget:
     macOS: "13.0"
@@ -42,6 +44,7 @@ targets:
     info:
       path: Pickmoji/Info.plist
       properties:
+        CFBundleDevelopmentRegion: $(DEVELOPMENT_LANGUAGE)
         CFBundleName: Pickmoji
         CFBundleDisplayName: Pickmoji
         CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
@@ -49,7 +52,7 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSUIElement: true
         LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
-        NSHumanReadableCopyright: "MIT License"
+        NSHumanReadableCopyright: "Licenza MIT"
         NSPrincipalClass: NSApplication
     settings:
       base:

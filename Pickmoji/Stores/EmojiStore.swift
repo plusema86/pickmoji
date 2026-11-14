@@ -1,23 +1,34 @@
 import Foundation
 
 struct EmojiSearchIndex {
-    private struct Entry {
-        let emoji: Emoji
+    private static let italianLocale = Locale(identifier: "it")
+
+    private struct SearchTerms {
         let label: String
         let words: [String]
         let tags: [String]
+
+        init(label: String, tags: [String]) {
+            self.label = EmojiSearchIndex.normalized(label)
+            words = self.label.split(whereSeparator: { !$0.isLetter && !$0.isNumber }).map(String.init)
+            self.tags = tags.map(EmojiSearchIndex.normalized)
+        }
+    }
+
+    private struct Entry {
+        let emoji: Emoji
+        let primary: SearchTerms
+        let english: SearchTerms?
     }
 
     private let entries: [Entry]
 
     init(emoji: [Emoji]) {
         entries = emoji.map { item in
-            let label = item.label.lowercased()
-            return Entry(
+            Entry(
                 emoji: item,
-                label: label,
-                words: label.split(whereSeparator: { !$0.isLetter && !$0.isNumber }).map(String.init),
-                tags: item.tags.map { $0.lowercased() }
+                primary: SearchTerms(label: item.label, tags: item.tags),
+                english: item.englishLabel.map { SearchTerms(label: $0, tags: item.englishTags ?? []) }
             )
         }
     }
@@ -25,31 +36,42 @@ struct EmojiSearchIndex {
     var all: [Emoji] { entries.map(\.emoji) }
 
     func search(_ rawQuery: String) -> [Emoji] {
-        let query = rawQuery.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let query = Self.normalized(rawQuery)
         guard !query.isEmpty else { return all }
         let tokens = query.split(separator: " ").map(String.init)
 
         return entries
-            .compactMap { entry -> (tier: Int, order: Int, emoji: Emoji)? in
-                guard let tier = tier(for: entry, query: query, tokens: tokens) else { return nil }
-                return (tier, entry.emoji.order, entry.emoji)
+            .compactMap { entry -> (language: Int, tier: Int, order: Int, emoji: Emoji)? in
+                if let tier = tier(for: entry.primary, query: query, tokens: tokens) {
+                    return (0, tier, entry.emoji.order, entry.emoji)
+                }
+                guard let english = entry.english,
+                      let tier = tier(for: english, query: query, tokens: tokens) else { return nil }
+                return (1, tier, entry.emoji.order, entry.emoji)
             }
             .sorted { lhs, rhs in
-                lhs.tier != rhs.tier ? lhs.tier < rhs.tier : lhs.order < rhs.order
+                (lhs.language, lhs.tier, lhs.order) < (rhs.language, rhs.tier, rhs.order)
             }
             .map(\.emoji)
     }
 
-    private func tier(for entry: Entry, query: String, tokens: [String]) -> Int? {
-        if entry.label.hasPrefix(query) { return 0 }
-        if entry.words.contains(where: { $0.hasPrefix(query) }) { return 1 }
-        if entry.tags.contains(where: { $0.hasPrefix(query) }) { return 1 }
+    private static func normalized(_ text: String) -> String {
+        text.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: italianLocale)
+            .replacingOccurrences(of: "’", with: "'")
+            .split(whereSeparator: \.isWhitespace)
+            .joined(separator: " ")
+    }
+
+    private func tier(for terms: SearchTerms, query: String, tokens: [String]) -> Int? {
+        if terms.label.hasPrefix(query) { return 0 }
+        if terms.words.contains(where: { $0.hasPrefix(query) }) { return 1 }
+        if terms.tags.contains(where: { $0.hasPrefix(query) }) { return 1 }
         for token in tokens {
-            let inLabel = entry.label.contains(token)
-            let inTags = entry.tags.contains { $0.contains(token) }
+            let inLabel = terms.label.contains(token)
+            let inTags = terms.tags.contains { $0.contains(token) }
             if !inLabel && !inTags { return nil }
         }
-        return entry.label.contains(query) ? 2 : 3
+        return terms.label.contains(query) ? 2 : 3
     }
 }
 

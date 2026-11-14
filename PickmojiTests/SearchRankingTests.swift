@@ -32,6 +32,37 @@ final class SearchRankingTests: XCTestCase {
         XCTAssertEqual(index.search("  Cat ").map(\.emoji), index.search("cat").map(\.emoji))
     }
 
+    func testSearchToleratesAccentsApostrophesAndWhitespace() {
+        let index = EmojiSearchIndex(emoji: [
+            emoji("🗑️", "cestino dell’immondizia", tags: ["rifiùti"], order: 1),
+        ])
+        XCTAssertEqual(index.search("  CESTINO\tDELL'IMMONDIZIA  ").map(\.emoji), ["🗑️"])
+        XCTAssertEqual(index.search("rifiuti").map(\.emoji), ["🗑️"])
+    }
+
+    func testItalianMatchesRankBeforeEnglishFallback() {
+        let index = EmojiSearchIndex(emoji: [
+            Emoji(emoji: "🎸", label: "chitarra", tags: [], group: 7, order: 1, skins: [],
+                  englishLabel: "music", englishTags: ["guitar"]),
+            emoji("🎵", "nota musicale", order: 2),
+        ])
+        XCTAssertEqual(index.search("music").map(\.emoji), ["🎵", "🎸"])
+        XCTAssertEqual(index.search("guitar").map(\.emoji), ["🎸"])
+    }
+
+    func testBundledDataIncludesItalianNamesKeywordsAndSynonyms() throws {
+        let data = try Data(contentsOf: EmojiStore.bundledDataURL())
+        let emoji = try EmojiStore.decode(data)
+        XCTAssertTrue(emoji.allSatisfy { !$0.label.isEmpty && !$0.tags.isEmpty && $0.englishLabel != nil })
+
+        let index = EmojiSearchIndex(emoji: emoji)
+        XCTAssertEqual(index.search("cuore rosso").first?.emoji, "❤️")
+        XCTAssertTrue(index.search("felicita").contains { $0.emoji == "😂" })
+        XCTAssertTrue(index.search("gattino").contains { $0.emoji == "🐱" })
+        XCTAssertTrue(index.search("spunta verde").contains { $0.emoji == "✅\u{FE0F}" })
+        XCTAssertTrue(index.search("red heart").contains { $0.emoji == "❤️" })
+    }
+
     func testTagPrefixMatchesRankWithWordPrefixes() {
         let index = EmojiSearchIndex(emoji: [
             emoji("😀", "smile", tags: ["grin"], order: 1),

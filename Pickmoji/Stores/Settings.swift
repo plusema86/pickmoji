@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 import ServiceManagement
 
 final class Settings: ObservableObject {
@@ -20,16 +21,20 @@ final class Settings: ObservableObject {
     }
 
     func setLaunchAtLogin(_ enabled: Bool) {
+        let service = SMAppService.mainApp
         do {
             if enabled {
-                try SMAppService.mainApp.register()
+                try service.register()
             } else {
-                try SMAppService.mainApp.unregister()
+                try service.unregister()
             }
             launchAtLoginError = nil
         } catch {
-            launchAtLoginError = error.localizedDescription
+            Logger().error("Impossibile modificare l’apertura al login. \(error.localizedDescription)")
+            launchAtLoginError = enabled
+                ? "Impossibile attivare l’apertura al login. Controlla gli elementi login nelle Impostazioni di Sistema."
+                : "Impossibile disattivare l’apertura al login. Controlla gli elementi login nelle Impostazioni di Sistema."
         }
-        launchAtLogin = SMAppService.mainApp.status == .enabled
+        launchAtLogin = service.status == .enabled
     }
 }

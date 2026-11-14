@@ -36,7 +36,8 @@ enum EmojiRenderability {
             let skins = item.skins.filter { isRenderable($0.emoji) }
             if skins.count == item.skins.count { return item }
             return Emoji(emoji: item.emoji, label: item.label, tags: item.tags,
-                         group: item.group, order: item.order, skins: skins)
+                         group: item.group, order: item.order, skins: skins,
+                         englishLabel: item.englishLabel, englishTags: item.englishTags)
         }
     }
 

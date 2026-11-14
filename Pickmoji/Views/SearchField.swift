@@ -14,7 +14,8 @@ struct SearchField: NSViewRepresentable {
 
     func makeNSView(context: Context) -> NSSearchField {
         let field = NSSearchField()
-        field.placeholderString = "Search emoji"
+        field.placeholderString = "Cerca emoji"
+        field.setAccessibilityLabel("Cerca emoji")
         field.delegate = context.coordinator
         field.sendsSearchStringImmediately = true
         field.sendsWholeSearchString = false

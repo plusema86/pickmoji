@@ -12,6 +12,20 @@ struct Emoji: Codable, Hashable, Identifiable {
     let group: Int
     let order: Int
     let skins: [Skin]
+    let englishLabel: String?
+    let englishTags: [String]?
+
+    init(emoji: String, label: String, tags: [String], group: Int, order: Int, skins: [Skin],
+         englishLabel: String? = nil, englishTags: [String]? = nil) {
+        self.emoji = emoji
+        self.label = label
+        self.tags = tags
+        self.group = group
+        self.order = order
+        self.skins = skins
+        self.englishLabel = englishLabel
+        self.englishTags = englishTags
+    }
 
     var id: String { emoji }
     var supportsSkinTones: Bool { !skins.isEmpty }
@@ -34,12 +48,12 @@ enum SkinTone: Int, CaseIterable, Codable, Identifiable {
 
     var name: String {
         switch self {
-        case .none: return "Default"
-        case .light: return "Light"
-        case .mediumLight: return "Medium-light"
-        case .medium: return "Medium"
-        case .mediumDark: return "Medium-dark"
-        case .dark: return "Dark"
+        case .none: return "Predefinita"
+        case .light: return "Chiara"
+        case .mediumLight: return "Medio-chiara"
+        case .medium: return "Media"
+        case .mediumDark: return "Medio-scura"
+        case .dark: return "Scura"
         }
     }
 
@@ -73,16 +87,16 @@ enum EmojiGroup: Int, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .smileys: return "Smileys & Emotion"
-        case .people: return "People & Body"
-        case .component: return "Components"
-        case .animals: return "Animals & Nature"
-        case .food: return "Food & Drink"
-        case .travel: return "Travel & Places"
-        case .activities: return "Activities"
-        case .objects: return "Objects"
-        case .symbols: return "Symbols"
-        case .flags: return "Flags"
+        case .smileys: return "Faccine ed emozioni"
+        case .people: return "Persone e corpo"
+        case .component: return "Componenti"
+        case .animals: return "Animali e natura"
+        case .food: return "Cibo e bevande"
+        case .travel: return "Viaggi e luoghi"
+        case .activities: return "Attività"
+        case .objects: return "Oggetti"
+        case .symbols: return "Simboli"
+        case .flags: return "Bandiere"
         }
     }
 }
